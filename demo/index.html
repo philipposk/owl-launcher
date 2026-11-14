@@ -1,0 +1,48 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Owl launcher</title>
+<style>
+  :root { color-scheme: light dark; }
+  body { margin: 0; min-height: 100vh; font: 16px/1.5 system-ui, sans-serif; background: #f6f5f1; color: #1b1b1b; }
+  @media (prefers-color-scheme: dark) { body { background: #16181c; color: #eee; } }
+  main { padding: 32px; max-width: 520px; }
+  .owl-btn { position: fixed; right: 24px; bottom: 24px; width: 56px; height: 56px; padding: 0; border: 0; border-radius: 50%;
+    background: transparent; cursor: pointer; transition: transform .15s; }
+  .owl-btn:hover { transform: scale(1.05); } .owl-btn:active { transform: scale(.95); }
+  .owl-btn:focus-visible { outline: 2px solid #4a7dff; outline-offset: 3px; }
+  .owl { position: relative; display: block; width: 100%; height: 100%; }
+  .owl img { position: absolute; inset: 0; width: 100%; height: 100%; opacity: 0; user-select: none; }
+  .owl[data-eyes="relaxed"] .relaxed, .owl[data-eyes="hunter"] .hunter, .owl[data-eyes="closed"] .closed { opacity: 1; }
+  .panel { position: fixed; right: 24px; bottom: 92px; width: 260px; padding: 16px; border-radius: 12px;
+    background: #fff; color: #1b1b1b; box-shadow: 0 8px 30px rgba(0,0,0,.18); display: none; }
+  .panel.open { display: block; }
+</style>
+</head>
+<body>
+<main>
+  <h1>Owl launcher</h1>
+  <p>Hover the owl: it focuses. Press: it blinks. Click: the panel opens.</p>
+</main>
+<div class="panel" id="panel">Hi! How can I help?</div>
+<button class="owl-btn" id="owl" aria-label="Open assistant">
+  <span class="owl" data-eyes="relaxed" aria-hidden="true">
+    <img class="relaxed" src="../assets/owl-relaxed.webp" alt="" draggable="false">
+    <img class="hunter" src="../assets/owl-hunter.webp" alt="" draggable="false">
+    <img class="closed" src="../assets/owl-closed.webp" alt="" draggable="false">
+  </span>
+</button>
+<script>
+  const btn = document.getElementById("owl"), owl = btn.firstElementChild, panel = document.getElementById("panel")
+  const eyes = (e) => (owl.dataset.eyes = e)
+  btn.addEventListener("pointerenter", () => eyes("hunter"))
+  btn.addEventListener("pointerleave", () => eyes("relaxed"))
+  btn.addEventListener("pointerdown", () => eyes("closed"))
+  btn.addEventListener("focus", () => { if (btn.matches(":focus-visible")) eyes("hunter") }) // mouse press also focuses; keep the blink
+  btn.addEventListener("blur", () => eyes("relaxed"))
+  btn.addEventListener("click", () => { eyes("hunter"); panel.classList.toggle("open") })
+</script>
+</body>
+</html>
